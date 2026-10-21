@@ -4,20 +4,43 @@ using System.Linq;
 
 public class AppointmentScheduler
 {
-    private readonly List<Appointment> appointments = new List<Appointment>();
+    private readonly List<Appointment> appointments = new();
 
     public bool ScheduleAppointment(Appointment newAppointment)
     {
-        if(newAppointment == null)
+        if (newAppointment == null)
         {
-            throw new ArgumentNullException(nameof(newAppointment),"The appointment cannot be left blank");
+            throw new ArgumentNullException(
+                nameof(newAppointment),
+                "Appointment cannot be null.");
         }
+
         ValidationHelper.RequireNotEmpty(newAppointment.Id, "Appointment ID");
-        ValidationHelper.RequireFutureDate(newAppointment.StartTime, "Appointment Time ");
+        ValidationHelper.RequireFutureDate(newAppointment.StartTime, "Appointment start time");
+
+        if (appointments.Any(a =>
+            string.Equals(a.Id, newAppointment.Id, StringComparison.OrdinalIgnoreCase)))
+        {
+            throw new InvalidOperationException(
+                $"An appointment with ID '{newAppointment.Id}' already exists.");
+        }
+
+        if (newAppointment.Status != "Scheduled")
+        {
+            throw new InvalidOperationException(
+                "Only appointments with Scheduled status can be added.");
+        }
 
         if (HasDoctorConflict(newAppointment))
         {
-            throw new InvalidOperationException($"Doctor: {newAppointment.Doctor.Name} has been conflict");
+            throw new InvalidOperationException(
+                $"Doctor '{newAppointment.Doctor.Name}' already has an appointment during this time.");
+        }
+
+        if (HasPatientConflict(newAppointment))
+        {
+            throw new InvalidOperationException(
+                $"Patient '{newAppointment.Patient.Name}' already has an appointment during this time.");
         }
 
         appointments.Add(newAppointment);
@@ -26,34 +49,48 @@ public class AppointmentScheduler
 
     public bool UpdateAppointmentStatus(string appointmentId, string newStatus)
     {
-        
         ValidationHelper.RequireNotEmpty(appointmentId, "Appointment ID");
-        ValidationHelper.RequireNotEmpty(newStatus, "New Status");
+        ValidationHelper.RequireNotEmpty(newStatus, "New status");
 
-        var appointment = appointments.FirstOrDefault(a => a.Id == appointmentId);
-        if(appointment == null) return false;
+        var appointment = appointments.FirstOrDefault(a =>
+            string.Equals(a.Id, appointmentId.Trim(), StringComparison.OrdinalIgnoreCase));
 
-        bool isValidTransition = ValidationHelper.IsValidStatusTransition(appointment.Status, newStatus);
-        if (!isValidTransition)
+        if (appointment == null)
         {
             return false;
         }
 
-        appointment.Status = newStatus;
+        if (!ValidationHelper.IsValidStatusTransition(appointment.Status, newStatus))
+        {
+            return false;
+        }
+
+        appointment.UpdateStatus(newStatus);
         return true;
-
     }
 
-    private bool HasDoctorConflict(Appointment newApp)
+    private bool HasDoctorConflict(Appointment newAppointment)
     {
-        return appointments.Any((existingApp =>
-            existingApp.Doctor.Id == newApp.Doctor.Id &&
-            existingApp.Status != "Cancelled" &&
-            newApp.StartTime < existingApp.EndTime &&
-            newApp.EndTime > existingApp.StartTime
-        ));        
-
+        return appointments.Any(existing =>
+            existing.Status != "Cancelled" &&
+            existing.Doctor.Id == newAppointment.Doctor.Id &&
+            Overlaps(existing, newAppointment));
     }
+
+    private bool HasPatientConflict(Appointment newAppointment)
+    {
+        return appointments.Any(existing =>
+            existing.Status != "Cancelled" &&
+            existing.Patient.Id == newAppointment.Patient.Id &&
+            Overlaps(existing, newAppointment));
+    }
+
+    private static bool Overlaps(Appointment first, Appointment second)
+    {
+        return second.StartTime < first.EndTime &&
+               second.EndTime > first.StartTime;
+    }
+
     public IReadOnlyList<Appointment> GetAppointments()
     {
         return appointments.AsReadOnly();
