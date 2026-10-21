@@ -7,7 +7,7 @@ public class Appointment
     public Doctor Doctor { get; }
     public DateTime StartTime { get; }
     public DateTime EndTime { get; }
-    public string Status { get; private set; }
+    public string Status { get; internal set; }
     public string? VisitOutcome { get; private set; }
 
     public Appointment(
