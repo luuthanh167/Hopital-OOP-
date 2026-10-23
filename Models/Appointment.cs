@@ -10,23 +10,15 @@ public class Appointment
     public string Status { get; internal set; }
     public string? VisitOutcome { get; private set; }
 
-    public Appointment(
-        string id,
-        Patient patient,
-        Doctor doctor,
-        DateTime startTime)
+    public Appointment(string id, Patient patient, Doctor doctor, DateTime startTime)
     {
         ValidationHelper.RequireNotEmpty(id, nameof(id));
 
         if (patient == null)
-        {
             throw new ArgumentNullException(nameof(patient));
-        }
 
         if (doctor == null)
-        {
             throw new ArgumentNullException(nameof(doctor));
-        }
 
         ValidationHelper.RequireFutureDate(startTime, "Appointment start time");
 
@@ -41,15 +33,15 @@ public class Appointment
 
     public void UpdateStatus(string newStatus)
     {
-        ValidationHelper.RequireNotEmpty(newStatus, nameof(newStatus));
+        string normalizedStatus = ValidationHelper.NormalizeAppointmentStatus(newStatus);
 
-        if (!ValidationHelper.IsValidStatusTransition(Status, newStatus))
+        if (!ValidationHelper.IsValidStatusTransition(Status, normalizedStatus))
         {
             throw new InvalidOperationException(
-                $"Cannot change appointment status from '{Status}' to '{newStatus}'.");
+                $"Cannot change appointment status from '{Status}' to '{normalizedStatus}'.");
         }
 
-        Status = newStatus;
+        Status = normalizedStatus;
     }
 
     public void RecordVisitOutcome(string outcome)
@@ -57,16 +49,12 @@ public class Appointment
         ValidationHelper.RequireNotEmpty(outcome, nameof(outcome));
 
         if (Status != "Completed")
-        {
             throw new InvalidOperationException(
                 "A visit outcome can only be recorded for a completed appointment.");
-        }
 
         if (VisitOutcome != null)
-        {
             throw new InvalidOperationException(
                 "A visit outcome has already been recorded for this appointment.");
-        }
 
         VisitOutcome = outcome.Trim();
     }

@@ -1,51 +1,49 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 public class MedicalHistory
 {
-    public string ID {get; }
-    public Patient Patient {get; }
+    public string ID { get; }
+    public Patient Patient { get; }
 
-    private readonly List<Appointment> completedAppointments = new List<Appointment>();
+    private readonly List<Appointment> completedAppointments = new();
 
     public MedicalHistory(string id, Patient patient)
     {
-        ValidationHelper.RequireNotEmpty(id, "MedicalHistory ID");
+        ValidationHelper.RequireNotEmpty(id, nameof(id));
 
-        if(patient == null)
-        {
-            throw new ArgumentNullException(nameof(patient), "Patient cannot be left blank.");
-        }
+        if (patient == null)
+            throw new ArgumentNullException(nameof(patient), "Patient cannot be null.");
 
-        ID = id;
+        ID = id.Trim();
         Patient = patient;
     }
 
     public void AddVisitRecord(Appointment appointment, string outcome)
     {
         if (appointment == null)
-        {
-            throw new ArgumentNullException(nameof(appointment), "Appointment cannot be left blank.");
-        }
+            throw new ArgumentNullException(nameof(appointment), "Appointment cannot be null.");
 
-        if (appointment.Patient.Id != Patient.Id)
-        {
+        if (!string.Equals(appointment.Patient.Id, Patient.Id, StringComparison.OrdinalIgnoreCase))
             throw new InvalidOperationException("Appointment does not belong to this patient.");
-        }
 
-        ValidationHelper.RequireNotEmpty(outcome, "Visit outcome");
+        ValidationHelper.RequireNotEmpty(outcome, nameof(outcome));
+        string normalizedOutcome = outcome.Trim();
 
-        appointment.RecordVisitOutcome(outcome);
+        // Appointment validates that the visit is completed and has no existing outcome.
+        appointment.RecordVisitOutcome(normalizedOutcome);
         completedAppointments.Add(appointment);
 
-        string recordEntry = $"[{appointment.StartTime:yyyy-MM-dd HH:mm}] Doctor: {appointment.Doctor.Name} | Outcome: {outcome}";
-        
-        string updatedRecord = string.IsNullOrEmpty(Patient.GetMedicalRecord())
-            ? recordEntry: $"{Patient.GetMedicalRecord()}\n{recordEntry}";
+        string recordEntry =
+            $"[{appointment.StartTime:yyyy-MM-dd HH:mm}] Doctor: {appointment.Doctor.Name} | Outcome: {normalizedOutcome}";
+
+        string existingRecord = Patient.GetMedicalRecord();
+        string updatedRecord = string.IsNullOrWhiteSpace(existingRecord)
+            ? recordEntry
+            : $"{existingRecord}{Environment.NewLine}{recordEntry}";
 
         Patient.UpdateMedicalRecord(updatedRecord);
-    }   
+    }
 
     public IReadOnlyList<Appointment> GetCompletedAppointments()
     {

@@ -17,21 +17,35 @@ public static class ValidationHelper
             throw new ArgumentException($"{fieldName} must be a future date.");
         }
     }
-    
+
+    public static string NormalizeAppointmentStatus(string status)
+    {
+        RequireNotEmpty(status, nameof(status));
+
+        string normalizedStatus = status.Trim();
+
+        if (string.Equals(normalizedStatus, "Scheduled", StringComparison.OrdinalIgnoreCase))
+            return "Scheduled";
+
+        if (string.Equals(normalizedStatus, "Completed", StringComparison.OrdinalIgnoreCase))
+            return "Completed";
+
+        if (string.Equals(normalizedStatus, "Cancelled", StringComparison.OrdinalIgnoreCase))
+            return "Cancelled";
+
+        throw new ArgumentException($"Unknown appointment status '{status}'.", nameof(status));
+    }
 
     public static bool IsValidStatusTransition(string currentStatus, string newStatus)
     {
-        if(currentStatus == "Scheduled")
-        {
-            if(newStatus == "Completed" || newStatus == "Cancelled")
-            {
-                return true;
-            }
-        }
-        else if(currentStatus == "Completed" || currentStatus == "Cancelled")
-        {
+        if (string.IsNullOrWhiteSpace(currentStatus) || string.IsNullOrWhiteSpace(newStatus))
             return false;
-        }
-        return false;
+
+        string current = currentStatus.Trim();
+        string next = newStatus.Trim();
+
+        return string.Equals(current, "Scheduled", StringComparison.OrdinalIgnoreCase)
+            && (string.Equals(next, "Completed", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(next, "Cancelled", StringComparison.OrdinalIgnoreCase));
     }
 }
