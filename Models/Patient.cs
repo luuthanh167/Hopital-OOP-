@@ -1,6 +1,6 @@
 public class Patient
 {
-    private string _medicalRecord;
+    private string _medicalRecord = string.Empty;
 
     public string Id { get; }
     public string Name { get; private set; }
@@ -8,17 +8,26 @@ public class Patient
 
     public Patient(string id, string name, string phone)
     {
-        ValidationHelper.RequireNotEmpty(id, "Patient ID");
-        ValidationHelper.RequireNotEmpty(name, "Patient name");
-        ValidationHelper.RequireNotEmpty(phone, "Phone");
+        ValidationHelper.RequireNotEmpty(id, nameof(id));
+        ValidationHelper.RequireNotEmpty(name, nameof(name));
+        ValidationHelper.RequireNotEmpty(phone, nameof(phone));
 
-        Id = id;
-        Name = name;
-        Phone = phone;
-        _medicalRecord = "";
+        Id = id.Trim();
+        Name = name.Trim();
+        Phone = phone.Trim();
     }
 
-    
+    public void UpdateName(string name)
+    {
+        ValidationHelper.RequireNotEmpty(name, nameof(name));
+        Name = name.Trim();
+    }
+
+    public void UpdatePhone(string phone)
+    {
+        ValidationHelper.RequireNotEmpty(phone, nameof(phone));
+        Phone = phone.Trim();
+    }
 
     public string GetMedicalRecord()
     {
@@ -27,7 +36,7 @@ public class Patient
 
     public void UpdateMedicalRecord(string record)
     {
-        ValidationHelper.RequireNotEmpty(record, "Medical record");
-        _medicalRecord = record;
+        ValidationHelper.RequireNotEmpty(record, nameof(record));
+        _medicalRecord = record.Trim();
     }
 }
