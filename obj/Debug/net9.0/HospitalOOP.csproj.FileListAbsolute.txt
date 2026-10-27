@@ -1,0 +1,15 @@
+C:\Users\luuba\Hopital-OOP-\bin\Debug\net9.0\HospitalOOP.exe
+C:\Users\luuba\Hopital-OOP-\bin\Debug\net9.0\HospitalOOP.deps.json
+C:\Users\luuba\Hopital-OOP-\bin\Debug\net9.0\HospitalOOP.runtimeconfig.json
+C:\Users\luuba\Hopital-OOP-\bin\Debug\net9.0\HospitalOOP.dll
+C:\Users\luuba\Hopital-OOP-\bin\Debug\net9.0\HospitalOOP.pdb
+C:\Users\luuba\Hopital-OOP-\obj\Debug\net9.0\HospitalOOP.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\luuba\Hopital-OOP-\obj\Debug\net9.0\HospitalOOP.AssemblyInfoInputs.cache
+C:\Users\luuba\Hopital-OOP-\obj\Debug\net9.0\HospitalOOP.AssemblyInfo.cs
+C:\Users\luuba\Hopital-OOP-\obj\Debug\net9.0\HospitalOOP.csproj.CoreCompileInputs.cache
+C:\Users\luuba\Hopital-OOP-\obj\Debug\net9.0\HospitalOOP.sourcelink.json
+C:\Users\luuba\Hopital-OOP-\obj\Debug\net9.0\HospitalOOP.dll
+C:\Users\luuba\Hopital-OOP-\obj\Debug\net9.0\refint\HospitalOOP.dll
+C:\Users\luuba\Hopital-OOP-\obj\Debug\net9.0\HospitalOOP.pdb
+C:\Users\luuba\Hopital-OOP-\obj\Debug\net9.0\HospitalOOP.genruntimeconfig.cache
+C:\Users\luuba\Hopital-OOP-\obj\Debug\net9.0\ref\HospitalOOP.dll
