@@ -11,18 +11,14 @@ public class MedicalHistory
     public MedicalHistory(string id, Patient patient)
     {
         ValidationHelper.RequireNotEmpty(id, nameof(id));
-
-        if (patient == null)
-            throw new ArgumentNullException(nameof(patient), "Patient cannot be null.");
-
+        ArgumentNullException.ThrowIfNull(patient);
         ID = id.Trim();
         Patient = patient;
     }
 
     public void AddVisitRecord(Appointment appointment, string outcome)
     {
-        if (appointment == null)
-            throw new ArgumentNullException(nameof(appointment), "Appointment cannot be null.");
+        ArgumentNullException.ThrowIfNull(appointment);
 
         if (!string.Equals(appointment.Patient.Id, Patient.Id, StringComparison.OrdinalIgnoreCase))
             throw new InvalidOperationException("Appointment does not belong to this patient.");
@@ -30,10 +26,8 @@ public class MedicalHistory
         ValidationHelper.RequireNotEmpty(outcome, nameof(outcome));
         string normalizedOutcome = outcome.Trim();
 
-        // Appointment validates that the visit is completed and has no existing outcome.
+        // RecordVisitOutcome validates status and duplicate outcomes before the history is changed.
         appointment.RecordVisitOutcome(normalizedOutcome);
-        completedAppointments.Add(appointment);
-
         string recordEntry =
             $"[{appointment.StartTime:yyyy-MM-dd HH:mm}] Doctor: {appointment.Doctor.Name} | Outcome: {normalizedOutcome}";
 
@@ -43,10 +37,8 @@ public class MedicalHistory
             : $"{existingRecord}{Environment.NewLine}{recordEntry}";
 
         Patient.UpdateMedicalRecord(updatedRecord);
+        completedAppointments.Add(appointment);
     }
 
-    public IReadOnlyList<Appointment> GetCompletedAppointments()
-    {
-        return completedAppointments.AsReadOnly();
-    }
+    public IReadOnlyList<Appointment> GetCompletedAppointments() => completedAppointments.AsReadOnly();
 }

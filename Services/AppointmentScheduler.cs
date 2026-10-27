@@ -8,91 +8,76 @@ public class AppointmentScheduler
 
     public bool ScheduleAppointment(Appointment newAppointment)
     {
-        if (newAppointment == null)
-        {
-            throw new ArgumentNullException(
-                nameof(newAppointment),
-                "Appointment cannot be null.");
-        }
-
-        ValidationHelper.RequireNotEmpty(newAppointment.Id, "Appointment ID");
+        ArgumentNullException.ThrowIfNull(newAppointment);
         ValidationHelper.RequireFutureDate(newAppointment.StartTime, "Appointment start time");
 
-        if (appointments.Any(a =>
-            string.Equals(a.Id, newAppointment.Id, StringComparison.OrdinalIgnoreCase)))
-        {
-            throw new InvalidOperationException(
-                $"An appointment with ID '{newAppointment.Id}' already exists.");
-        }
+        if (appointments.Any(a => string.Equals(a.Id, newAppointment.Id, StringComparison.OrdinalIgnoreCase)))
+            throw new InvalidOperationException($"An appointment with ID '{newAppointment.Id}' already exists.");
 
         if (newAppointment.Status != "Scheduled")
-        {
-            throw new InvalidOperationException(
-                "Only appointments with Scheduled status can be added.");
-        }
+            throw new InvalidOperationException("Only appointments with Scheduled status can be added.");
 
-        if (HasDoctorConflict(newAppointment))
-        {
-            throw new InvalidOperationException(
-                $"Doctor '{newAppointment.Doctor.Name}' already has an appointment during this time.");
-        }
-
-        if (HasPatientConflict(newAppointment))
-        {
-            throw new InvalidOperationException(
-                $"Patient '{newAppointment.Patient.Name}' already has an appointment during this time.");
-        }
-
+        EnsureNoConflicts(newAppointment, null);
         appointments.Add(newAppointment);
+        return true;
+    }
+
+    public bool RescheduleAppointment(string appointmentId, DateTime newStartTime)
+    {
+        ValidationHelper.RequireNotEmpty(appointmentId, nameof(appointmentId));
+        ValidationHelper.RequireFutureDate(newStartTime, "Appointment start time");
+
+        Appointment? appointment = appointments.FirstOrDefault(a =>
+            string.Equals(a.Id, appointmentId.Trim(), StringComparison.OrdinalIgnoreCase));
+
+        if (appointment == null)
+            return false;
+
+        if (appointment.Status != "Scheduled")
+            throw new InvalidOperationException("Only scheduled appointments can be rescheduled.");
+
+        // Validate using a temporary appointment so a failed reschedule never mutates the original.
+        Appointment proposed = new Appointment(
+            appointment.Id, appointment.Patient, appointment.Doctor, newStartTime);
+        EnsureNoConflicts(proposed, appointment);
+        appointment.Reschedule(newStartTime);
         return true;
     }
 
     public bool UpdateAppointmentStatus(string appointmentId, string newStatus)
     {
-        ValidationHelper.RequireNotEmpty(appointmentId, "Appointment ID");
-        ValidationHelper.RequireNotEmpty(newStatus, "New status");
+        ValidationHelper.RequireNotEmpty(appointmentId, nameof(appointmentId));
+        string normalizedStatus = ValidationHelper.NormalizeAppointmentStatus(newStatus);
 
-        var appointment = appointments.FirstOrDefault(a =>
+        Appointment? appointment = appointments.FirstOrDefault(a =>
             string.Equals(a.Id, appointmentId.Trim(), StringComparison.OrdinalIgnoreCase));
 
         if (appointment == null)
-        {
             return false;
-        }
 
-        if (!ValidationHelper.IsValidStatusTransition(appointment.Status, newStatus))
-        {
+        if (!ValidationHelper.IsValidStatusTransition(appointment.Status, normalizedStatus))
             return false;
-        }
 
-        appointment.UpdateStatus(newStatus);
+        appointment.UpdateStatus(normalizedStatus);
         return true;
     }
 
-    private bool HasDoctorConflict(Appointment newAppointment)
+    private void EnsureNoConflicts(Appointment candidate, Appointment? ignoredAppointment)
     {
-        return appointments.Any(existing =>
+        bool conflicts = appointments.Any(existing =>
+            !ReferenceEquals(existing, ignoredAppointment) &&
             existing.Status != "Cancelled" &&
-            existing.Doctor.Id == newAppointment.Doctor.Id &&
-            Overlaps(existing, newAppointment));
+            (string.Equals(existing.Doctor.Id, candidate.Doctor.Id, StringComparison.OrdinalIgnoreCase) ||
+             string.Equals(existing.Patient.Id, candidate.Patient.Id, StringComparison.OrdinalIgnoreCase)) &&
+            Overlaps(existing, candidate));
+
+        if (conflicts)
+            throw new InvalidOperationException(
+                "The doctor or patient already has an appointment during this time.");
     }
 
-    private bool HasPatientConflict(Appointment newAppointment)
-    {
-        return appointments.Any(existing =>
-            existing.Status != "Cancelled" &&
-            existing.Patient.Id == newAppointment.Patient.Id &&
-            Overlaps(existing, newAppointment));
-    }
+    private static bool Overlaps(Appointment first, Appointment second) =>
+        second.StartTime < first.EndTime && second.EndTime > first.StartTime;
 
-    private static bool Overlaps(Appointment first, Appointment second)
-    {
-        return second.StartTime < first.EndTime &&
-               second.EndTime > first.StartTime;
-    }
-
-    public IReadOnlyList<Appointment> GetAppointments()
-    {
-        return appointments.AsReadOnly();
-    }
+    public IReadOnlyList<Appointment> GetAppointments() => appointments.AsReadOnly();
 }

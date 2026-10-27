@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "lfeKbYZUMu4=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\luuba\\Hopital-OOP-\\HospitalOOP.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\luuba\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.21\\microsoft.netcore.app.ref.9.0.21.nupkg.sha512",
+    "C:\\Users\\luuba\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.21\\microsoft.windowsdesktop.app.ref.9.0.21.nupkg.sha512",
+    "C:\\Users\\luuba\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.21\\microsoft.aspnetcore.app.ref.9.0.21.nupkg.sha512",
+    "C:\\Users\\luuba\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\9.0.21\\microsoft.netcore.app.host.win-x64.9.0.21.nupkg.sha512"
+  ],
+  "logs": []
+}
