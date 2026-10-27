@@ -5,21 +5,16 @@ public class Appointment
     public string Id { get; }
     public Patient Patient { get; }
     public Doctor Doctor { get; }
-    public DateTime StartTime { get; }
-    public DateTime EndTime { get; }
+    public DateTime StartTime { get; private set; }
+    public DateTime EndTime { get; private set; }
     public string Status { get; internal set; }
     public string? VisitOutcome { get; private set; }
 
     public Appointment(string id, Patient patient, Doctor doctor, DateTime startTime)
     {
         ValidationHelper.RequireNotEmpty(id, nameof(id));
-
-        if (patient == null)
-            throw new ArgumentNullException(nameof(patient));
-
-        if (doctor == null)
-            throw new ArgumentNullException(nameof(doctor));
-
+        ArgumentNullException.ThrowIfNull(patient);
+        ArgumentNullException.ThrowIfNull(doctor);
         ValidationHelper.RequireFutureDate(startTime, "Appointment start time");
 
         Id = id.Trim();
@@ -28,7 +23,6 @@ public class Appointment
         StartTime = startTime;
         EndTime = startTime.AddMinutes(30);
         Status = "Scheduled";
-        VisitOutcome = null;
     }
 
     public void UpdateStatus(string newStatus)
@@ -42,6 +36,18 @@ public class Appointment
         }
 
         Status = normalizedStatus;
+    }
+
+    // Only the scheduler may change appointment times, after checking conflicts.
+    internal void Reschedule(DateTime newStartTime)
+    {
+        ValidationHelper.RequireFutureDate(newStartTime, "Appointment start time");
+
+        if (Status != "Scheduled")
+            throw new InvalidOperationException("Only scheduled appointments can be rescheduled.");
+
+        StartTime = newStartTime;
+        EndTime = newStartTime.AddMinutes(30);
     }
 
     public void RecordVisitOutcome(string outcome)
