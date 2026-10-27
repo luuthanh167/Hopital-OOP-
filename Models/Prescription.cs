@@ -18,45 +18,36 @@ public class Prescription
         string dosage,
         string instructions)
     {
-        ValidationHelper.RequireNotEmpty(id, "Prescription ID");
+        ValidationHelper.RequireNotEmpty(id, nameof(id));
+        ArgumentNullException.ThrowIfNull(patient);
+        ArgumentNullException.ThrowIfNull(doctor);
+        ValidationHelper.RequireNotEmpty(medicationName, nameof(medicationName));
+        ValidationHelper.RequireNotEmpty(dosage, nameof(dosage));
+        ValidationHelper.RequireNotEmpty(instructions, nameof(instructions));
 
-        if (patient == null)
-        {
-            throw new ArgumentNullException(nameof(patient));
-        }
-
-        if (doctor == null)
-        {
-            throw new ArgumentNullException(nameof(doctor));
-        }
-
-        ValidationHelper.RequireNotEmpty(medicationName, "Medication name");
-        ValidationHelper.RequireNotEmpty(dosage, "Dosage");
-        ValidationHelper.RequireNotEmpty(instructions, "Instructions");
-
-        Id = id;
+        Id = id.Trim();
         Patient = patient;
         Doctor = doctor;
-        MedicationName = medicationName;
-        Dosage = dosage;
-        Instructions = instructions;
+        MedicationName = medicationName.Trim();
+        Dosage = dosage.Trim();
+        Instructions = instructions.Trim();
         PrescribedDate = DateTime.Now;
     }
 
     public void UpdateInstructions(string instructions)
     {
-        ValidationHelper.RequireNotEmpty(
-            instructions, "Instructions");
-
-        Instructions = instructions;
+        ValidationHelper.RequireNotEmpty(instructions, nameof(instructions));
+        Instructions = instructions.Trim();
     }
 
     public void UpdateDosage(string dosage)
     {
-        ValidationHelper.RequireNotEmpty(dosage, "Dosage");
-
-        Dosage = dosage;
+        ValidationHelper.RequireNotEmpty(dosage, nameof(dosage));
+        Dosage = dosage.Trim();
     }
+
+    public string GetSummary() =>
+        $"Prescription {Id}: {MedicationName}; Dosage: {Dosage}; Instructions: {Instructions}";
 
     public void DisplayPrescription()
     {
@@ -66,6 +57,6 @@ public class Prescription
         Console.WriteLine($"Medication: {MedicationName}");
         Console.WriteLine($"Dosage: {Dosage}");
         Console.WriteLine($"Instructions: {Instructions}");
-        Console.WriteLine($"Prescribed Date: {PrescribedDate}");
+        Console.WriteLine($"Prescribed Date: {PrescribedDate:yyyy-MM-dd HH:mm}");
     }
 }
