@@ -1,8 +1,8 @@
-﻿# Hospital / Clinic Patient Management System
+# Hospital / Clinic Patient Management System
 
 ## 1. Project Overview & Team Division
 
-- **Course code:** 261DASA240179E_02FIE
+- **Course code:** 261OOPR230279E_02FIE
 - **Instructor:** Huỳnh Xuân Phụng
 
 **Team members:**
