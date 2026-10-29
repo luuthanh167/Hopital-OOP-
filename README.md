@@ -202,13 +202,12 @@ The console program creates sample doctor and patient objects, schedules an appo
 
 ## 10. AI Usage Log
 
-AI tools may be used as learning and development assistants during this project. Any AI-assisted output should be reviewed by the team, checked against the actual source code, and understood by the students before submission.
+The team used **Gemini 3.6 Flash**, as declared in the AI-use form, as a development assistant for the console menu portion of this project.
 
-| Activity | AI assistance | Team responsibility |
+| Activity | AI tool and assistance | Team review and contribution |
 | --- | --- | --- |
-| Documentation | Helped organize and improve README wording and section structure | Team members verify that descriptions match the implemented project |
-| OOP explanations | Helped explain encapsulation, inheritance, abstraction, and polymorphism | Team members confirm the concepts and explain them in their own words |
-| Testing guidance | Suggested test scenarios for validation, appointment scheduling, status transitions, and medical history | Team members execute the tests and record the actual results |
-| Debugging support | Helped interpret compiler or Git errors and suggest troubleshooting steps | Team members review changes, run the project, and decide which fixes to keep |
+| Console menu planning | Gemini 3.6 Flash helped outline a menu-driven console flow, including numbered options, reading the user's selection, and directing the selection to the relevant operation. | The team reviewed the suggested structure and adapted it to the existing Hospital Management System classes and workflow. |
+| Integrating with the existing code | AI guidance was used to help reason about connecting menu operations with existing Model and Service classes. | The team checked the method calls and class responsibilities against the project code and adjusted the implementation where needed. |
+| Testing and verification | AI assistance helped identify useful scenarios to check, such as appointment conflicts, invalid status transitions, and medical-history validation. | The team ran the test runner locally. The recorded run reported **18 passed and 0 failed**. This result refers to that specific run. |
 
-**Transparency note:** This log describes the types of AI assistance used or planned for documentation and development support. The team should edit it to accurately reflect the tools and assistance actually used, and should not claim that a test passed unless it was run and verified.
+AI-generated suggestions were treated as drafts, not as authoritative results. The team is responsible for reviewing the code, understanding the implementation, and ensuring that the README accurately describes the submitted project.
