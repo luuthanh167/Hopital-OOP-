@@ -134,21 +134,46 @@ Validation exceptions make invalid input fail explicitly instead of silently cre
 
 ## 7. Test Cases and Test Results
 
-The console test program demonstrates the main patient and appointment workflow. The following cases describe the expected behavior to verify when running the application.
+### 7.1 Test Execution
 
-| Test ID | Scenario | Input / Action | Expected result |
-| --- | --- | --- | --- |
-| TC-01 | Create a doctor | Provide a valid ID, name, specialty, and phone number | A `Doctor` object is created with the supplied details |
-| TC-02 | Create a patient | Provide a valid ID, name, and phone number | A `Patient` object is created and its medical record starts empty |
-| TC-03 | Schedule an appointment | Create an appointment at a future time and pass it to the scheduler | The appointment is added successfully |
-| TC-04 | Reject a past appointment | Try to create or schedule an appointment whose time is in the past | Validation throws an `ArgumentException` |
-| TC-05 | Detect a doctor conflict | Schedule another appointment for the same doctor during an overlapping time | The scheduler rejects the conflicting appointment |
-| TC-06 | Update appointment status | Change a `Scheduled` appointment to `Completed` | The status is updated successfully |
-| TC-07 | Reject an invalid status transition | Try to change an already completed or cancelled appointment | The transition is rejected |
-| TC-08 | Record a visit outcome | Add a non-empty outcome to the patient's medical history | The outcome is recorded and the patient's medical record is updated |
-| TC-09 | Reject empty required text | Pass an empty or whitespace-only required string to validation | An `ArgumentException` is thrown |
+The test runner was executed using the following command in PowerShell:
 
-**Test result reporting:** Record the actual outcome after running each test. Do not mark all cases as passed unless they have been executed and verified. The current console demonstration prints the created doctor and patient, schedules a future appointment, updates its status, records a visit outcome, and displays the medical record.
+```powershell
+dotnet run --project .\HospitalOOP.csproj
+```
+
+**Actual test result: 18 passed, 0 failed.**
+
+All 18 checks passed successfully during this test run.
+
+### 7.2 Test Results
+
+| No. | Test Case | Actual Result |
+|---:|---|---|
+| 1 | Schedule a valid appointment | PASS |
+| 2 | Reject overlapping doctor appointments | PASS |
+| 3 | Allow back-to-back appointments | PASS |
+| 4 | Reject rescheduling into a conflict | PASS |
+| 5 | Preserve the original appointment time after a failed reschedule | PASS |
+| 6 | Reschedule an appointment to an available time | PASS |
+| 7 | Return false for an unknown appointment | PASS |
+| 8 | Update appointment status case-insensitively | PASS |
+| 9 | Reject an invalid status transition | PASS |
+| 10 | Reject an unknown appointment status | PASS |
+| 11 | Reject a visit record for another patient | PASS |
+| 12 | Record a completed visit in medical history | PASS |
+| 13 | Reject a duplicate visit outcome | PASS |
+| 14 | Trim unnecessary whitespace from prescription fields | PASS |
+| 15 | Update prescription dosage and instructions successfully | PASS |
+| 16 | Reject an empty prescription dosage during an update | PASS |
+| 17 | Reject a prescription with a missing dosage | PASS |
+| 18 | Reject an appointment scheduled in the past | PASS |
+
+### 7.3 Summary
+
+The test runner completed all 18 checks successfully, with no failures. The results demonstrate that the tested appointment scheduling, conflict detection, status validation, medical history, prescription validation, and rescheduling operations behaved as expected in this test run.
+
+
 
 ## 8. Data Privacy Considerations
 
