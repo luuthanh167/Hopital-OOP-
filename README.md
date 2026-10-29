@@ -202,12 +202,13 @@ The console program creates sample doctor and patient objects, schedules an appo
 
 ## 10. AI Usage Log
 
-The team used **Gemini 3.6 Flash**, as declared in the AI-use form, as a development assistant for the console menu portion of this project.
+As recorded in the team's AI-use form, **Gemini 3.6 Flash** was used as an assistant when developing the console menu for the Hospital Management System.
 
 | Activity | AI tool and assistance | Team review and contribution |
 | --- | --- | --- |
-| Console menu planning | Gemini 3.6 Flash helped outline a menu-driven console flow, including numbered options, reading the user's selection, and directing the selection to the relevant operation. | The team reviewed the suggested structure and adapted it to the existing Hospital Management System classes and workflow. |
-| Integrating with the existing code | AI guidance was used to help reason about connecting menu operations with existing Model and Service classes. | The team checked the method calls and class responsibilities against the project code and adjusted the implementation where needed. |
-| Testing and verification | AI assistance helped identify useful scenarios to check, such as appointment conflicts, invalid status transitions, and medical-history validation. | The team ran the test runner locally. The recorded run reported **18 passed and 0 failed**. This result refers to that specific run. |
+| Console menu | Gemini 3.6 Flash helped suggest an initial menu-driven console structure, including numbered options and a flow for receiving and handling the user's selection. | The team reviewed the suggestion and adapted the menu to the existing project classes and required hospital workflow. |
+| Understanding and integration | Gemini 3.6 Flash was used to help explain the generated structure and how menu options could connect to the existing Model and Service classes. | The team checked the implementation against the project code and remained responsible for integrating and understanding the final result. |
 
-AI-generated suggestions were treated as drafts, not as authoritative results. The team is responsible for reviewing the code, understanding the implementation, and ensuring that the README accurately describes the submitted project.
+The team ran the project's test runner separately to verify behavior. The recorded test run reported **18 passed and 0 failed**. This result describes that specific run and is not presented as an AI-generated test result.
+
+AI output was treated as a suggestion that required review. The team is responsible for understanding the submitted code and ensuring this log matches the tool and assistance actually used.
