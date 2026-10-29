@@ -227,13 +227,12 @@ The console program creates sample doctor and patient objects, schedules an appo
 
 ## 10. AI Usage Log
 
-AI tools may be used as learning and development assistants during this project. Any AI-assisted output should be reviewed by the team, checked against the actual source code, and understood by the students before submission.
+During the development of the Hospital Management System, the team used AI tools to support implementation, debugging, code review, testing, and documentation. **Gemini 3.6 Flash** was declared in the AI-use form. ChatGPT was also used as an assistant for explaining code, troubleshooting errors, and reviewing the project.
 
-| Activity | AI assistance | Team responsibility |
-| --- | --- | --- |
-| Documentation | Helped organize and improve README wording and section structure | Team members verify that descriptions match the implemented project |
-| OOP explanations | Helped explain encapsulation, inheritance, abstraction, and polymorphism | Team members confirm the concepts and explain them in their own words |
-| Testing guidance | Suggested test scenarios for validation, appointment scheduling, status transitions, and medical history | Team members execute the tests and record the actual results |
-| Debugging support | Helped interpret compiler or Git errors and suggest troubleshooting steps | Team members review changes, run the project, and decide which fixes to keep |
-
-**Transparency note:** This log describes the types of AI assistance used or planned for documentation and development support. The team should edit it to accurately reflect the tools and assistance actually used, and should not claim that a test passed unless it was run and verified.
+| Activity | AI assistance | Team contribution |
+|---|---|---|
+| Console menu | Assisted with the initial design of the menu structure and user interaction flow. | Reviewed and adapted the menu to work with the existing classes and services. |
+| Code implementation and review | Explained OOP concepts, class responsibilities, and interactions between classes such as `Patient`, `Staff`, `Appointment`, and `AppointmentScheduler`. Suggested possible improvements to the implementation. | Evaluated the suggestions and ensured that the code matched the project requirements. |
+| Debugging and error fixing | Helped investigate compilation and runtime errors, identify possible causes, explain incorrect behavior, and suggest fixes for issues found during development. | Applied and reviewed relevant fixes, then rebuilt or reran the program to check whether the issues were resolved. |
+| Appointment scheduling | Helped review appointment creation, rescheduling, cancellation, status transitions, and scheduling conflict validation. | Integrated and checked the scheduling logic, including conflict handling and preservation of the original appointment when rescheduling failed. |
+| Testing | Helped identify useful test scenarios and interpret test results. | Executed the test runner and recorded the actual result of the reported run: **18 tests passed and 0 failed**. |
