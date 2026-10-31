@@ -14,6 +14,17 @@ internal static class Program
     private static void Main()
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
+         Console.WriteLine("===== TEST POLYMORPHISM =====");
+        TestPolymorphism();
+
+        Console.WriteLine("\nNhan Enter de tiep tuc...");
+        Console.ReadLine();
+
+
+        TestRunner.Run();
+
+        Console.WriteLine("\nNhan Enter de thoat...");
+        Console.ReadLine();
         bool running = true;
         while (running)
         {
@@ -48,6 +59,22 @@ internal static class Program
             }
         }
         Console.WriteLine("Đã thoát hệ thống quản lý bệnh án.");
+    }
+
+        private static void TestPolymorphism()
+    {
+        List<Staff> staffMembers = new List<Staff>
+        {
+            new Doctor("D01", "John", "Cardiology", "0123456789"),
+            new Nurse("N01", "Mary", "Emergency", "0987654321")
+        };
+
+        Console.WriteLine("\n--- Polymorphism Test ---");
+
+        foreach (Staff staff in staffMembers)
+        {
+            staff.PerformDuty();
+        }
     }
 
     private static void ShowMenu()
